@@ -416,6 +416,20 @@ while True:
         
         sg.popup("Todos os dados foram limpos!")
 
+    if event == '-emitir_recibo':
+        try:
+            dados_recibo = (values['-cliente_recibo-'], values['-valor_recibo-'], values['-valor_extenso_recibo-'], values['-referente_recibo-'], values['-data_recibo-'], values['-funcionario_recibo-'])
+            metodos.gerar_recibo(dados_recibo)
+            sg.popup("Recibo gerado com sucesso!")
+            window['-cliente_recibo-'].update("")
+            window['-valor_recibo-'].update("")
+            window['-valor_extenso_recibo-'].update("")
+            window['-referente_recibo-'].update("")
+            window['-data_recibo-'].update("")
+            window['-funcionario_recibo-'].update("")
+        except:
+            sg.popup("Houve um erro ao gerar o recibo")
+
     if event == '-salvar_cliente-':
         try:
             new_cliente = [values['-nome_cliente_cad-'], values['-telefone-'], values['-email_cliente_cad-'], values['-documento_cliente-']]

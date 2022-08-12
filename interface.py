@@ -78,7 +78,15 @@ def tab3(frame02, frame03):
 
 def tab4():
     tab4 = [
-        [sg.Text('--Area em desenvolvimento--')]
+        [sg.Text('Cliente: '), sg.InputText('',key=('-cliente_recibo-'))],
+        [sg.Text('Valor: '), sg.InputText('',key=('-valor_recibo-'))],
+        [sg.Text('Valor por extenso'), sg.InputText('',key=('-valor_extenso_recibo-'))],
+        [sg.Text('Referente: '), sg.InputText('',key=('-referente_recibo-'))],
+        [sg.Text('Data: '), sg.InputText('',key=('-data_recibo-'))],
+        [sg.Text('Funcionario: '), sg.InputText('',key=('-funcionario_recibo-'))],
+        [sg.Button('Emitir Recibo', key=('-emitir_recibo'))]
+
+
     ]
     return tab4
 

@@ -1,3 +1,8 @@
+from openpyxl import load_workbook
+from openpyxl.drawing.image import Image
+from win32com import client
+from pathlib import Path
+
 def coletar_dados(caminho_arquivo_txt, tipo):
     # 0 para lista
     # 1 para dict
@@ -50,3 +55,45 @@ def salvar_dados(caminho_arquivo, lista):
 def gerar_email(cnpj, valor, data):
     pass
 
+def gerar_recibo(dados):
+    nome = dados[0]
+    valor = dados[1]
+    extenso = dados[2]
+    referente = dados[3]
+    data = dados[4]
+    data = data.split("/")
+    dia = data[0]
+    mes = data[1]
+    ano = data[2]
+    funcionario = dados[5]
+
+    #criando planilha (Book)
+    arquivo = load_workbook('./recibos/source/recibo.xlsx')
+
+    recibo = arquivo['page01']
+    recibo = arquivo.active
+
+    recibo['H3'] = valor
+    recibo['C6'] = nome
+    recibo['C8'] = extenso
+    recibo['C10'] = referente
+    recibo['B13'] = dia
+    recibo['D13'] = mes
+    recibo['G13'] = ano
+    recibo['I13'] = funcionario
+
+    arquivo.save(f'./recibos/reciboTemp.xlsx')
+    path_fille = Path('./recibos/reciboTemp.xlsx').absolute()
+    path_fille = str(path_fille)
+    path_fille = path_fille.replace("\\", "\\\\")
+
+    #Abrindo Aplicativo Excel
+    app_excel = client.DispatchEx("Excel.Application")
+    app_excel.Interactive = False
+    app_excel.Visible = False
+
+    #Abrindo arquivo excel
+    workbook = app_excel.Workbooks.Open(path_fille)
+    #Convertendo em PDF
+    workbook.ActiveSheet.ExportAsFixedFormat(0, path_fille)
+    workbook.Close()
