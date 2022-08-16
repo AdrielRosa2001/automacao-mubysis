@@ -5,7 +5,7 @@ from time import sleep
 from turtle import update
 from playwright.sync_api import sync_playwright
 #from cmath import atan
-from msilib.schema import Font
+from msilib.schema import Font, Icon
 import PySimpleGUI as sg
 import interface
 import metodos
@@ -189,8 +189,6 @@ def realizar_relatorio_muby(data, loja, relatorios): # relatorios(plotagem, imag
     os.system("explorer.exe \"C:\\Users\\PRODUCAOPC2\\Desktop\\Relatorios_e_Recibos")"""
 
 
-def limpar_campos(lista_de_campos_a_ser_limpo):
-    pass
 #Tema do programa deifindo
 sg.theme('Reddit')
 
@@ -205,7 +203,11 @@ coluna04 = interface.coluna04()
 frame02 = interface.frame02(coluna01, coluna02, coluna03, coluna04)
 frame03 = interface.frame03()
 tab3 = interface.tab3(frame02, frame03)
-tab4 = interface.tab4()
+coluna07 = interface.coluna07()
+coluna08 = interface.coluna08()
+frame05 = interface.frame05(coluna07, coluna08)
+frame06 = interface.frame06()
+tab4 = interface.tab4(frame05, frame06)
 coluna05 = interface.coluna05()
 coluna06 = interface.coluna06()
 frame04 = interface.frame04(coluna05, coluna06)
@@ -213,10 +215,13 @@ tab5 = interface.tab5(frame04)
 layout = interface.layout(tab1, tab2, tab3, tab4, tab5)
 
 
-window = sg.Window('AutoMuby 3.0', layout)
+window = sg.Window('AutoMuby 3.0', layout, icon='./assets/icon2.0.ico')
 
 # Abrindo configurações:
 database = metodos.coletar_dados("configs.txt", 0)
+
+# var email
+email = ("", "")
 
 while True:
     event, values = window.read()
@@ -380,52 +385,67 @@ while True:
         valor_os = valor_os.replace(",", ".")
         metragem = (float(valor_os))/14.60
         valor_os = valor_os.replace(".", ",")
-        
+
+        tipo_doc_clienter = ""
+        if values['-tipo_doc_cpf-'] == True:
+            tipo_doc_clienter = "CPF"
+        elif values['-tipo_doc_cnpj-'] == True:
+            tipo_doc_clienter = "CNPJ"
+        else:
+            tipo_doc_clienter = "DOCUMENTO: "
+            sg.popup("Tipo de documento do cliente não selecionado!\nSelecione e aplique novamente.")
 
         titulo_email = f"NOTA FISCAL - {cliente}"
-
-        valida_cpf = values['-cpf-']
-        valida_cnpj = values['-cnpj-']
-        result_validacao = ""
-
-        if valida_cpf == True:
-            result_validacao = "CPF"
-        elif valida_cpf == False:
-            if valida_cnpj == True:
-                result_validacao = "CNPJ"
-            elif valida_cnpj == False:
-                result_validacao = "INDEFINIDO"
-        else:
-            result_validacao = "INDEFINIDO"
         
-        corpo_de_email = f"Boa Tarde, Luciana\n\n\nSegue abaixo dados para emissão de Nota Fiscal.\n\n{cliente}\n{result_validacao}: {documento}\nEMAIL : {email_cliente}\nFORMA DE PAGAMENTO : {f_pagamento}\nSEGUE ABAIXO DESCRIÇÃO DOS SERVIÇOS\n\nOS : {num_os} DATA: {data_os}\nPlotagem em Papel Sulfite 75g Modelo: Color Linhas\nVALOR METRO: R$ 14,60\nMETRAGEM: {metragem}\nVALOR : R$ {valor_os}\n\nVALOR TOTAL: R$ {valor_os}\n\nGrato,\n\nAdriel Rosa,\nEquipe São José\n"
+        corpo_de_email = f"Boa Tarde, Luciana\n\n\nSegue abaixo dados para emissão de Nota Fiscal.\n\n{cliente}\n{tipo_doc_clienter}: {documento}\nEMAIL : {email_cliente}\nFORMA DE PAGAMENTO : {f_pagamento}\nSEGUE ABAIXO DESCRIÇÃO DOS SERVIÇOS\n\nOS : {num_os} DATA: {data_os}\nPlotagem em Papel Sulfite 75g Modelo: Color Linhas\nVALOR METRO: R$ 14,60\nMETRAGEM: {metragem}\nVALOR : R$ {valor_os}\n\nVALOR TOTAL: R$ {valor_os}\n\nGrato,\n\nAdriel Rosa,\nEquipe São José\n"
 
         email = (titulo_email, corpo_de_email)
 
         window['-corpo_de_email-'].update(corpo_de_email)
         window['-titulo_email-'].update(titulo_email)
         sg.popup("Corpo de Email gerado!\nVerifique se o corpo de email está correto antes do envio!")
+    
 
     if event == '-limpar_email-':
         elementos_email_limpar = ['-corpo_de_email-', '-nome_cliente-', '-email_cliente-', '-n_os-', '-cpf_cnpj-', '-forma_de_pagamento-', '-data_os-', '-valor_os-']
         for i in elementos_email_limpar:
             window[i].update("")
-        window['-cpf-'].update(False)
-        window['-cnpj-'].update(False)
+        window['-tipo_doc_cpf-'].update(False)
+        window['-tipo_doc_cnpj-'].update(False)
         window['-titulo_email-'].update("NOTA FISCAL - ")
         
         sg.popup("Todos os dados foram limpos!")
 
-    if event == '-emitir_recibo':
+    if event == '-enviar_email-':
+        dados_login_email = (database[3], database[4])
+        titulo = email[0]
+        mensagem = values['-corpo_de_email-']
+        email = (titulo, mensagem)
         try:
-            dados_recibo = (values['-cliente_recibo-'], values['-valor_recibo-'], values['-valor_extenso_recibo-'], values['-referente_recibo-'], values['-data_recibo-'], values['-funcionario_recibo-'])
+            metodos.enviar_email(dados_login_email, email, "financeiro@birocroqui.com.br")
+            email = ("", "")
+            sg.popup("Email enviado com sucesso ao financeiro!")
+
+            window['-corpo_de_email-'].update("")
+            elementos_email_limpar = ['-corpo_de_email-', '-nome_cliente-', '-email_cliente-', '-n_os-', '-cpf_cnpj-', '-forma_de_pagamento-', '-data_os-', '-valor_os-']
+            for i in elementos_email_limpar:
+                window[i].update("")
+            window['-tipo_doc_cpf-'].update(False)
+            window['-tipo_doc_cnpj-'].update(False)
+            window['-titulo_email-'].update("NOTA FISCAL - ")
+            
+            sg.popup("Todos os dados foram limpos!")
+        except:
+            sg.popup("Houve algum erro ao enviar o email!")
+
+    if event == '-emitir_recibo_manual-':
+        try:
+            dados_recibo = {'cliente': values['-cliente_recibo-'], 'valor': values['-valor_recibo-'], 'referente': values['-referente_recibo-'], 'funcionario': values['-funcionario_recibo-']}
             metodos.gerar_recibo(dados_recibo)
             sg.popup("Recibo gerado com sucesso!")
             window['-cliente_recibo-'].update("")
             window['-valor_recibo-'].update("")
-            window['-valor_extenso_recibo-'].update("")
             window['-referente_recibo-'].update("")
-            window['-data_recibo-'].update("")
             window['-funcionario_recibo-'].update("")
         except:
             sg.popup("Houve um erro ao gerar o recibo")

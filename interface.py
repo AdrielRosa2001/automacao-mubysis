@@ -8,7 +8,7 @@ def frame01():
 
 def tab1(frame01):
     tab1 = [ 
-        [sg.Text('Ordem de Serviço:'), sg.InputText(key=('-ordem_de_serviço-'), size=(10, 1)), sg.Text('Forma de Pagamento:'), sg.InputCombo(('AMERICAN EXPRESS', 'DEPÓSITO BB - CROQUI', 'DEPÓSITO BNB - CROQUI', 'DINERS - CRÉDITO', 'DINERS - DÉBITO', 'ELO - CRÉDITO', 'ELO - DÉBITO', 'ESPÉCIE', 'HIPERCARD', 'MASTER CRÉDITO - CROQUI', 'MASTER DÉBITO - CROQUI', 'VISA CRÉDITO - CROQUI', 'VISA DÉBITO - CROQUI'), default_value='A DEFINIR', key=('-f_pagamento-'), size=(27,1))],
+        [sg.Text('Ordem de Serviço:'), sg.InputText(key=('-ordem_de_serviço-'), size=(10, 1)), sg.Text('Forma de Pagamento:'), sg.InputCombo(('PIX', 'AMERICAN EXPRESS', 'DEPÓSITO BB - CROQUI', 'DEPÓSITO BNB - CROQUI', 'DINERS - CRÉDITO', 'DINERS - DÉBITO', 'ELO - CRÉDITO', 'ELO - DÉBITO', 'ESPÉCIE', 'HIPERCARD', 'MASTER CRÉDITO - CROQUI', 'MASTER DÉBITO - CROQUI', 'VISA CRÉDITO - CROQUI', 'VISA DÉBITO - CROQUI', 'MENSALISTA'), default_value='A DEFINIR', key=('-f_pagamento-'), size=(27,1))],
         [sg.Checkbox('PCP', key=('-pcp-'), default=True), sg.Checkbox('PRODUÇÃO', key=('-producao-') , default=True), sg.Checkbox('FATURAMENTO', key=('-faturamento-'), default=True), sg.Text('', size=(13,1)),  sg.Button('Limpar', key=('-limpar_dados_os-')),sg.Button('Adicionar', key=('-adicionar-'))],
         [sg.Frame('Ordens de Serviço & Logs do Sistema', frame01, font='Any 12')],
         [sg.Button('Iniciar', key=('-iniciar-'), size=(10, 1))]
@@ -41,7 +41,7 @@ def coluna02():
 
 def coluna03():
     coluna03 = [
-        [sg.Checkbox('CPF', key=('-cpf-')), sg.Checkbox('CPNJ', key=('-cnpj-'))],
+        [sg.Radio('CPF', '-doc_tipo-', key=('-tipo_doc_cpf-')), sg.Radio('CPNJ', '-doc_tipo-', key=('-tipo_doc_cnpj-'))],
         [sg.Text('Forma de Pagto: ')],
         [sg.Text('Data da OS: ')]
     ]
@@ -50,7 +50,7 @@ def coluna03():
 def coluna04():
     coluna04 = [
         [sg.InputText('', key=('-cpf_cnpj-'), size=(19, 1))],
-        [sg.InputText('', key=('-forma_de_pagamento-'), size=(19,1))],
+        [sg.InputCombo(('PIX', 'ESPÉCIE', 'CARTÃO'), default_value='A DEFINIR', key=('-forma_de_pagamento-'), size=(17,1))],
         [sg.InputText('', key=('-data_os-'), size=(19, 1))]
     ]
     return coluna04
@@ -65,7 +65,8 @@ def frame02(coluna01, coluna02, coluna03, coluna04):
 
 def frame03():
     frame03 = [
-        [sg.Multiline('', key=('-corpo_de_email-'),size=(74, 12))]
+        [sg.Multiline('', key=('-corpo_de_email-'),size=(74, 12))],
+        [sg.Button('Enviar email', key=('-enviar_email-'), size=(67, 1))]
     ]
     return frame03
 
@@ -76,17 +77,43 @@ def tab3(frame02, frame03):
     ]
     return tab3
 
-def tab4():
+def coluna07():
+    coluna07 = [
+        [sg.Text('Cliente: ')],
+        [sg.Text('Valor: ')],
+        [sg.Text('Referente: ')],
+        [sg.Text('Funcionario: ')]
+        
+    ]
+    return coluna07
+
+def coluna08():
+    coluna08 = [
+        [sg.InputText('',key=('-cliente_recibo-'))],
+        [sg.InputText('',key=('-valor_recibo-'))],
+        [sg.InputText('',key=('-referente_recibo-'))],
+        [sg.InputText('',key=('-funcionario_recibo-'))]
+    ]
+    return coluna08
+
+def frame05(coluna07, coluna08):
+    frame05 = [
+        [sg.Column(coluna07), sg.Column(coluna08)],
+        [sg.Text('', size=(38, 1)), sg.Button('Emitir Recibo Manual', key=('-emitir_recibo_manual-'))]
+    ]
+    return frame05
+
+def frame06():
+    frame06 = [
+        [sg.Text('--Área em desenvolvimento--')],
+        [sg.Text('Numero da OS: '), sg.InputText('', size=(15, 1)), sg.Button('Emitir Recibo Muby', key=('-emitir_recibo_Muby-'))]
+    ]
+    return frame06
+
+def tab4(frame05, frame06):
     tab4 = [
-        [sg.Text('Cliente: '), sg.InputText('',key=('-cliente_recibo-'))],
-        [sg.Text('Valor: '), sg.InputText('',key=('-valor_recibo-'))],
-        [sg.Text('Valor por extenso'), sg.InputText('',key=('-valor_extenso_recibo-'))],
-        [sg.Text('Referente: '), sg.InputText('',key=('-referente_recibo-'))],
-        [sg.Text('Data: '), sg.InputText('',key=('-data_recibo-'))],
-        [sg.Text('Funcionario: '), sg.InputText('',key=('-funcionario_recibo-'))],
-        [sg.Button('Emitir Recibo', key=('-emitir_recibo'))]
-
-
+        [sg.Frame('Emitir Recibo Manual', frame05)],
+        [sg.Frame('Emitir Recibo Muby', frame06)]
     ]
     return tab4
 
