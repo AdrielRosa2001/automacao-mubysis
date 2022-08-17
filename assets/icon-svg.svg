@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="124.784mm" height="124.784mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 9250.29 9250.29"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil1 {fill:none;fill-rule:nonzero}
+    .fil0 {fill:url(#id1)}
+   ]]>
+  </style>
+    <clipPath id="id0">
+     <path d="M4110.33 2477.94l792.49 0 999.84 2995.53 1004.82 -2995.53 790.5 0 719.72 4294.42 -788.5 0 -458.55 -2712.42 -909.12 2712.42 -721.71 0 -905.14 -2712.42 -120.47 698.93 -550.55 -1430.5 146.68 -850.44zm-1614.97 -0.01l823.39 0 1652.77 4294.43 -850.32 0 -334.94 -885.2 -1760.43 0 -342.91 885.2 -850.32 0 1662.75 -4294.43zm412.69 1141.4l-582.16 1478.32 1161.32 0 -579.16 -1478.32z"/>
+    </clipPath>
+  <linearGradient id="id1" gradientUnits="userSpaceOnUse" x1="305.06" y1="8547.66" x2="8911.22" y2="314.4">
+   <stop offset="0" style="stop-opacity:1; stop-color:#7D04E0"/>
+   <stop offset="0.580392" style="stop-opacity:1; stop-color:#FA0D93"/>
+   <stop offset="1" style="stop-opacity:1; stop-color:#FAB1DC"/>
+  </linearGradient>
+ </defs>
+ <g id="Camada_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" x="-0.01" y="-0.01" width="9250.29" height="9250.29" rx="1111.96" ry="1111.96"/>
+  <g id="_1499763487040">
+   <path class="fil1" d="M2495.35 2477.93l823.39 0 1652.77 4294.43 -850.32 0 -334.94 -885.2 -1760.43 0 -342.91 885.2 -850.32 0 1662.75 -4294.43zm412.69 1141.4l-582.16 1478.32 1161.32 0 -579.16 -1478.32z"/>
+   <polygon class="fil1" points="4110.33,2477.94 4902.82,2477.94 5902.66,5473.46 6907.48,2477.94 7697.98,2477.94 8417.7,6772.36 7629.2,6772.36 7170.65,4059.94 6261.53,6772.36 5539.81,6772.36 4634.67,4059.94 4514.21,4758.87 3963.65,3328.37 "/>
+  </g>
+  <g id="_1499763487472">
+   <g style="clip-path:url(#id0)">
+    <image x="832.6" y="2477.93" width="7585.1" height="4294.43" xlink:href="icon-svg_Images\icon-svg_ImgID1.png"/>
+   </g>
+  </g>
+ </g>
+</svg>
