@@ -161,8 +161,11 @@ def gerar_recibo(dados):
     recibo['G13'] = ano
     recibo['I13'] = funcionario
 
-    arquivo.save(f'./recibos/recibo-{nome}.xlsx')
-    path_fille = Path(f'./recibos/recibo-{nome}.xlsx').absolute()
+
+    nome_save = str(nome).replace(" ", "-")
+
+    arquivo.save(f'./recibos/recibo-{nome_save}.xlsx')
+    path_fille = Path(f'./recibos/recibo-{nome_save}.xlsx').absolute()
     path_fille = str(path_fille)
     path_fille = path_fille.replace("\\", "\\\\")
 

@@ -9,6 +9,8 @@ from msilib.schema import Font, Icon
 import PySimpleGUI as sg
 import interface
 import metodos
+import os
+
 
 
 # Codigo muby empresa: 237157
@@ -348,7 +350,12 @@ while True:
         sg.popup("Dados limpos com sucesso!")
 
     if event == '-consultar-':
+
         data = values['-data_relatorio-']
+
+        os.system('python modulo_muby.py')
+        """data = values['-data_relatorio-']
+
         plotagem = 0
         imagem = 0
         if values['-plotagem-'] == True:
@@ -373,6 +380,8 @@ while True:
                 pass
             page.wait_for_timeout(5000)
             browser.close()
+            browser.close()"""
+
     
     if event == '-confirmar-':
         cliente = values['-nome_cliente-']
@@ -447,8 +456,11 @@ while True:
             window['-valor_recibo-'].update("")
             window['-referente_recibo-'].update("")
             window['-funcionario_recibo-'].update("")
-        except:
+
+        except Exception as err:
             sg.popup("Houve um erro ao gerar o recibo")
+            print(err)
+
 
     if event == '-salvar_cliente-':
         try:
