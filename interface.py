@@ -157,7 +157,7 @@ def layout(tab1, tab2, tab3, tab4, tab5):
             [sg.Tab('Recibos', tab4)],
             [sg.Tab('Cadastros', tab5)]
             ])],
-            [sg.Text('', size=(42,1)), sg.Button('Close'),sg.Button('Sobre', key=('-sobre-')), sg.Button('Headless = ON ', key=('-headless-'))]
+            [sg.Text('', size=(30,1)), sg.Button('Close'),sg.Button('Sobre', key=('-sobre-')), sg.Button('Headless = ON ', key=('-headless-')), sg.Button('Configurações', key=('-configs-'))]
         
     ] 
     return layout

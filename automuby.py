@@ -14,7 +14,7 @@ import os
 
 
 # Codigo muby empresa: 237157
-database = dict()
+#database = dict()
 guias = []
 headless_set = 'ON'
 
@@ -220,7 +220,10 @@ layout = interface.layout(tab1, tab2, tab3, tab4, tab5)
 window = sg.Window('AutoMuby 3.0', layout, icon='./assets/icon2.0.ico')
 
 # Abrindo configurações:
-database = metodos.coletar_dados("configs.txt", 0)
+#database = metodos.coletar_dados("configs.txt", 0)
+database = metodos.getDadosLogin()
+credenciais_muby = database[0]
+credenciais_email = database[1]
 
 # var email
 email = ("", "")
@@ -242,7 +245,7 @@ while True:
     if event == '-adicionar-':
         data_os = "hoje"
         procedimentos = [values['-pcp-'], values['-producao-'], values['-faturamento-']]
-        guia = [str(values['-ordem_de_serviço-']), data_os, str(values['-f_pagamento-']), database[2], procedimentos]
+        guia = [str(values['-ordem_de_serviço-']), data_os, str(values['-f_pagamento-']), credenciais_muby[3], procedimentos]
         guias.append(guia)
         atualizar_campo = f"{values['-os_adicionadas-']}\n{values['-ordem_de_serviço-']} - {values['-f_pagamento-']} || PCP: {procedimentos[0]} - PRODU: {procedimentos[1]} - FATUR: {procedimentos[2]}"
         window['-os_adicionadas-'].update(atualizar_campo)
@@ -259,7 +262,7 @@ while True:
                     browser = headless_inicial(headless_set)
                     page = browser.new_page()
                     try:
-                        realizar_login(database[0], database[1]) # database[0], database[1]  = usuario & senha
+                        realizar_login(credenciais_muby[1], credenciais_muby[2]) 
                         print("---Login realizado com sucesso!---")
                         a = 0
                         concluido = 0
@@ -370,10 +373,10 @@ while True:
             browser = headless_inicial(headless_set)
             page = browser.new_page()
             try:
-                realizar_login(database[0], database[1])
+                realizar_login(credenciais_muby[1], credenciais_muby[2])
                 print("---Login realizado com sucesso!---")
                 try:
-                    realizar_relatorio_muby(str(data), database[2], relatorios)
+                    realizar_relatorio_muby(str(data), credenciais_muby[3], relatorios)
                 except Exception as err:
                     print(err)
             except:
@@ -426,7 +429,7 @@ while True:
         sg.popup("Todos os dados foram limpos!")
 
     if event == '-enviar_email-':
-        dados_login_email = (database[3], database[4])
+        dados_login_email = (credenciais_email[0], credenciais_email[1])
         titulo = email[0]
         mensagem = values['-corpo_de_email-']
         email = (titulo, mensagem)
@@ -465,7 +468,8 @@ while True:
     if event == '-salvar_cliente-':
         try:
             new_cliente = [values['-nome_cliente_cad-'], values['-telefone-'], values['-email_cliente_cad-'], values['-documento_cliente-']]
-            metodos.salvar_dados(f"clientes_cadastrados/{new_cliente[0].upper()}.txt", new_cliente)
+            #metodos.salvar_dados(f"clientes_cadastrados/{new_cliente[0].upper()}.txt", new_cliente)
+            metodos.salvar_cliente(new_cliente)
             window['-nome_cliente_cad-'].update("")
             window['-telefone-'].update("")
             window['-email_cliente_cad-'].update("")
@@ -481,7 +485,8 @@ while True:
         window['-documento_cliente-'].update("")
         sg.popup("Dados limpos com sucesso!")
         
-    
+    if event == '-configs-':
+        os.system("python configs.py")
     if event == '-sobre-':
         sg.popup("Aplicação desenvolvida por @adri3lr00 ;p\n\nBibliotecas Utilizadas:\n- PySimpleGui(4.56.0)\n- Playwright(1.21)\n- openpyxl()")
 

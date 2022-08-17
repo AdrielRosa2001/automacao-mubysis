@@ -1,11 +1,16 @@
 import sqlite3
 from xml.dom.minidom import Element
 
+nome_tabela = "loginUsuario"
 #Criando conexão com banco de dados
 banco = sqlite3.connect('database.db')
 
 #Criando elemento cursos para passar comandos para o banco de dados
 cursor = banco.cursor()
+
+#cursor.execute("UPDATE loginUsuario SET usuario= 'Marques' WHERE usuario= 'Adriel'")
+#cursor.execute("ALTER TABLE loginUsuario ADD COLUMN id")
+#banco.close()
 
 #Criando atbelas
 #cursor.execute("CREATE TABLE loginEmail (email text, senha text)")

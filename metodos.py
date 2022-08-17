@@ -8,6 +8,42 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import sqlite3
+
+path_folders = None #path (recibos muby, recibos manual, clientes cadastrados)
+
+def getDadosLogin():
+    banco = sqlite3.connect('database.db')
+    cursor = banco.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM loginUsuario")
+        dados_login = cursor.fetchall()[0] #(1, usuario, senha, loja)
+        cursor.execute("SELECT * FROM loginEmail")
+        dados_email = cursor.fetchall()[0] #(email, senha)
+        banco.close()
+        dados_login_banco = (dados_login, dados_email)
+        return dados_login_banco
+    except sqlite3.Error as erro:
+        print(erro)
+        banco.close()
+        return False
+
+def getPathFilesBanco():
+    banco = sqlite3.connect('database.db')
+    cursor = banco.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM pathFiles")
+        path_files_banco = cursor.fetchall()[0]
+        banco.close()
+        return path_files_banco
+    except sqlite3.Error as erro:
+        print(erro)
+        banco.close()
+
+path_folders = getPathFilesBanco()
+print(path_folders)
 
 def getdata(saida):
     data_public = datetime.date.today()
@@ -39,7 +75,7 @@ def gerar_numero_por_extenso(valor_entrada):
 
         return valor_total_extenso
 
-def coletar_dados(caminho_arquivo_txt, tipo):
+""" def coletar_dados(caminho_arquivo_txt, tipo):
     # 0 para lista
     # 1 para dict
     #retorna uma lista ou um dict
@@ -61,7 +97,7 @@ def coletar_dados(caminho_arquivo_txt, tipo):
             i = i.replace(" ", "")
             temp_dict[cont] = i
             cont = cont+1
-        return temp_dict
+        return temp_dict """
 
 def salvar_dados(caminho_arquivo, lista):
     # 0 para lista
@@ -87,6 +123,15 @@ def salvar_dados(caminho_arquivo, lista):
         arquivo.writelines(temp_list)
         arquivo.close()
         print("Dados salvos!!")
+
+def salvar_cliente(cliente):
+    temp_list = []
+    for i in cliente:
+        temp_list.append(i+str("\n"))
+    arquivo = open(str(path_folders[0])+f"/{str(cliente[0]).upper()}.txt", "w")
+    arquivo.writelines(temp_list)
+    arquivo.close()
+    print("Dados salvos!!")
 
 def enviar_email(dados, mensagem, destino):
     # Configuração
