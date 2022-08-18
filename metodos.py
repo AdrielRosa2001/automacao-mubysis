@@ -42,6 +42,43 @@ def getPathFilesBanco():
         print(erro)
         banco.close()
 
+def getDadosDb(bancodb, tabela):
+    banco = sqlite3.connect(f"{bancodb}")
+    cursor = banco.cursor()
+
+    try:
+        cursor.execute(f"SELECT * FROM {tabela}")
+        guias = cursor.fetchall()[0]
+        banco.close()
+        return guias
+    except sqlite3.Error as erro:
+        print(erro)
+        banco.close()
+
+def insertDadosTabela(bancodb, tabela, valores):
+    banco = sqlite3.connect(f"{bancodb}")
+    cursor = banco.cursor()
+    try:
+        cursor.execute(f"INSERT INTO {tabela} VALUES({valores})")
+        banco.commit()
+        banco.close()
+        print("Dados da guia inseridos no banco!")
+    except:
+        print("Houve um erro ao tentar inserir os dados no banco!")
+        banco.close()
+
+def limparDadosBanco(bancodb, tabela):
+    banco = sqlite3.connect(f"{bancodb}")
+    cursor = banco.cursor()
+    try:
+        cursor.execute(f"DELETE FROM {tabela}")
+        banco.commit()
+        banco.close()
+        print("Dados apagados com sucesso do banco!")
+    except:
+        print("Houve um erro ao tentar apagar os dados do banco!")
+        banco.close()
+
 path_folders = getPathFilesBanco()
 print(path_folders)
 
@@ -169,18 +206,7 @@ def gerar_recibo(dados):
 
     nome = dados['cliente']
     valor = float(str(dados['valor']).replace(",", "."))
-    valor_str = str(valor).split(".")
-    valor_str = valor_str[0]
-    resto = int((valor*100)% 100)
-    resto = str(resto)
-    valor_str = f"{valor_str},{resto}"
-
-    try:
-        valor = str(valor)
-        valor = valor.replace(',', '.')
-        valor = float(valor)
-    except:
-        valor = float(valor)
+    
     extenso = gerar_numero_por_extenso(valor)
     referente = dados['referente']
     
@@ -197,7 +223,7 @@ def gerar_recibo(dados):
     recibo = arquivo['page01']
     recibo = arquivo.active
 
-    recibo['H3'] = f"R$ {valor_str}"
+    recibo['H3'] = ("R$ "+(str("%.2f" %(valor)).replace(".", ",")))
     recibo['C6'] = nome
     recibo['C8'] = extenso
     recibo['C10'] = referente

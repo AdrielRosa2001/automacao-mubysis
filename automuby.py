@@ -1,6 +1,7 @@
 from asyncio.proactor_events import _ProactorBaseWritePipeTransport
 from importlib.resources import path
 from logging import handlers
+import py_compile
 from time import sleep
 from turtle import update
 from playwright.sync_api import sync_playwright
@@ -245,7 +246,29 @@ while True:
     if event == '-adicionar-':
         data_os = "hoje"
         procedimentos = [values['-pcp-'], values['-producao-'], values['-faturamento-']]
+
+        pcp = 0
+        producao = 0
+        faturameno = 0
+
+        if values['-pcp-'] == True:
+            pcp = 1
+        else:
+            pcp = 0
+
+        if values['-producao-'] == True:
+            producao = 1
+        else:
+            producao = 0
+
+        if values['-faturamento-'] == True:
+            faturameno = 1
+        else:
+            faturameno = 0
+
         guia = [str(values['-ordem_de_serviço-']), data_os, str(values['-f_pagamento-']), credenciais_muby[3], procedimentos]
+        # (numeroOs, dataOs, formaPagamento, loja, pcp, producao, faturamento)
+        metodos.insertDadosTabela("dbguias.db", "guias", f" '{str(values['-ordem_de_serviço-'])}', '{data_os}', '{str(values['-f_pagamento-'])}', '{str(credenciais_muby[3])}', {pcp}, {producao}, {faturameno}")
         guias.append(guia)
         atualizar_campo = f"{values['-os_adicionadas-']}\n{values['-ordem_de_serviço-']} - {values['-f_pagamento-']} || PCP: {procedimentos[0]} - PRODU: {procedimentos[1]} - FATUR: {procedimentos[2]}"
         window['-os_adicionadas-'].update(atualizar_campo)
@@ -349,7 +372,8 @@ while True:
         window['-ordem_de_serviço-'].update('')
         window['-f_pagamento-'].update('A DEFINIR')
         guias = []
-        print("Dados limpos com sucesso!")
+        metodos.limparDadosBanco("dbguias.db", "guias")
+        print("Dados do servidor limpos com sucesso!")
         sg.popup("Dados limpos com sucesso!")
 
     if event == '-consultar-':
@@ -393,10 +417,9 @@ while True:
         documento = values['-cpf_cnpj-']
         f_pagamento = values['-forma_de_pagamento-']
         data_os = values['-data_os-']
-        valor_os = str(values['-valor_os-'])
-        valor_os = valor_os.replace(",", ".")
-        metragem = (float(valor_os))/14.60
-        valor_os = valor_os.replace(".", ",")
+        valor_os = float(str(values['-valor_os-']).replace(",", "."))
+        metragem = str("%.4f" %(valor_os/14.60))
+        valor_os = str("%.2f" %(valor_os)).replace(".", ",")
 
         tipo_doc_clienter = ""
         if values['-tipo_doc_cpf-'] == True:
@@ -409,7 +432,7 @@ while True:
 
         titulo_email = f"NOTA FISCAL - {cliente}"
         
-        corpo_de_email = f"Boa Tarde, Luciana\n\n\nSegue abaixo dados para emissão de Nota Fiscal.\n\n{cliente}\n{tipo_doc_clienter}: {documento}\nEMAIL : {email_cliente}\nFORMA DE PAGAMENTO : {f_pagamento}\nSEGUE ABAIXO DESCRIÇÃO DOS SERVIÇOS\n\nOS : {num_os} DATA: {data_os}\nPlotagem em Papel Sulfite 75g Modelo: Color Linhas\nVALOR METRO: R$ 14,60\nMETRAGEM: {metragem}\nVALOR : R$ {valor_os}\n\nVALOR TOTAL: R$ {valor_os}\n\nGrato,\n\nAdriel Rosa,\nEquipe São José\n"
+        corpo_de_email = f"Boa Tarde, Luciana\n\n\nSegue abaixo dados para emissão de Nota Fiscal.\n\n{cliente}\n{tipo_doc_clienter}: {documento}\nEMAIL : {email_cliente}\nFORMA DE PAGAMENTO : {f_pagamento}\nSEGUE ABAIXO DESCRIÇÃO DOS SERVIÇOS\n\nOS : {num_os} DATA: {data_os}\nPlotagem em Papel Sulfite 75g Modelo: Color Linhas\nVALOR METRO: R$ 14,60\nMETRAGEM: {metragem}\nVALOR : R$ {valor_os}\n\nVALOR TOTAL: R$ {valor_os}\n\nGrato,\n\n{credenciais_muby[1]},\nEquipe São José\n"
 
         email = (titulo_email, corpo_de_email)
 
