@@ -48,7 +48,7 @@ def getDadosDb(bancodb, tabela):
 
     try:
         cursor.execute(f"SELECT * FROM {tabela}")
-        guias = cursor.fetchall()[0]
+        guias = cursor.fetchall()
         banco.close()
         return guias
     except sqlite3.Error as erro:
@@ -62,9 +62,9 @@ def insertDadosTabela(bancodb, tabela, valores):
         cursor.execute(f"INSERT INTO {tabela} VALUES({valores})")
         banco.commit()
         banco.close()
-        print("Dados da guia inseridos no banco!")
+        print("*** Dados da guia inseridos no banco! ***")
     except:
-        print("Houve um erro ao tentar inserir os dados no banco!")
+        print("*** Houve um erro ao tentar inserir os dados no banco! ***")
         banco.close()
 
 def limparDadosBanco(bancodb, tabela):
@@ -74,9 +74,35 @@ def limparDadosBanco(bancodb, tabela):
         cursor.execute(f"DELETE FROM {tabela}")
         banco.commit()
         banco.close()
-        print("Dados apagados com sucesso do banco!")
+        print("*** Dados apagados com sucesso do banco! ***")
     except:
-        print("Houve um erro ao tentar apagar os dados do banco!")
+        print("*** Houve um erro ao tentar apagar os dados do banco! ***")
+        banco.close()
+
+def deletLinhaBanco(bancodb, tabela, campo, item):
+    banco = sqlite3.connect(f"{bancodb}")
+    cursor = banco.cursor()
+    try:
+        #cursor.execute("DELETE FROM loginUsuario WHERE usuario = 'Marques'")
+        cursor.execute(f"DELETE FROM {tabela} WHERE {campo} = {item}") # se o item for string inserir o item com aspas duplas depois simples = " 'Adriel' "
+        banco.commit()
+        banco.close()
+        print("*** Dados da coluna apagados com sucesso do banco! ***")
+    except:
+        print("*** Houve um erro ao tentar apagar os dados da coluna do banco! ***")
+        banco.close()
+
+def updateLinhaBanco(bancodb, tabela, campo, item, campo2, item2):
+    banco = sqlite3.connect(f"{bancodb}")
+    cursor = banco.cursor()
+    try:
+        #cursor.execute("UPDATE loginUsuario SET usuario= 'Marques' WHERE usuario= 'Adriel'")
+        cursor.execute(f"UPDATE {tabela} SET {campo} = '{item}' WHERE {campo2}= '{item2}'") # se o item for string inserir o item com aspas duplas depois simples = " 'Adriel' "
+        banco.commit()
+        banco.close()
+        print("*** Dados da coluna alterados com sucesso do banco! ***")
+    except:
+        print("*** Houve um erro ao tentar alterar os dados da coluna do banco! ***")
         banco.close()
 
 path_folders = getPathFilesBanco()

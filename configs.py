@@ -55,9 +55,6 @@ except:
     path_files = (str(path_files).replace("\configs.py", "")).replace("\\", "/")
     path_recibos_mu, path_recibos_ma, path_cadastros_clientes = path_files+"/recibos/", path_files+"/recibos/", path_files+"/clientes_cadastrados/"
 
-print(path_recibos_mu)
-print(path_recibos_ma)
-print(path_cadastros_clientes)
 
 def salvar_dados():
     usuario_m = values['-usuario_muby-']
