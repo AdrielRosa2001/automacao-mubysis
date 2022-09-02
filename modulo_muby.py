@@ -96,6 +96,7 @@ def realizar_producao(guia):
 
 def realizar_faturamento(guia):
     page.goto("https://mubisys.com/index.php?modulo=Faturamento")
+    page.wait_for_timeout(4000)
     page.locator("[placeholder=\"Buscar\"]").fill(guia[0])
     page.locator("[placeholder=\"Buscar\"]").press("Enter")
     page.locator("#buscargeral").click()
@@ -190,16 +191,19 @@ if argumentos[1] == "--faturar":
                     for guia in guias:
                         print("----------------------------------------")
                         if guia[4] == 1 or guia[5] == 1:
+                            acessar_pagina_pcp()
                             if guia[4] == 1:
                                 try:
                                     realizar_pcp(guia)
                                     print(f"------{guia[0]} - PCP Realizado!")
+                                    metodos.updateLinhaBanco("dbguias.db", "guias", "pcp", 0, "numeroOs", str(guia[0]))
                                 except:
                                     print(f"------{guia[0]} - PCP FALHOU!")
                             if guia[5] == 1:
                                 try:
                                     realizar_producao(guia)
                                     print(f"------{guia[0]} - Produção Realizado!")
+                                    metodos.updateLinhaBanco("dbguias.db", "guias", "producao", 0, "numeroOs", str(guia[0]))
                                 except:
                                     print(f"------{guia[0]} - Produção FALHOU!")
                         if guia[6] == 1:
@@ -207,6 +211,7 @@ if argumentos[1] == "--faturar":
                                 realizar_faturamento(guia)
                                 print(f"------{guia[0]} - Faturamento Realizado!")
                                 print("----------------------------------------")
+                                metodos.updateLinhaBanco("dbguias.db", "guias", "faturamento", 0, "numeroOs", str(guia[0]))
                                 metodos.updateLinhaBanco("dbguias.db", "guias", "status", "efetuado", "numeroOS", str(guia[0]))
                             except:
                                 print(f"------{guia[0]} - Faturamento FALHOU!")

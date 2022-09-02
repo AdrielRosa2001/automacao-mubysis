@@ -147,6 +147,7 @@ credenciais_email = database[1]
 email = ["", ""]
 
 while True:
+    print("================================================================================")
     event, values = window.read()
     if event == sg.WIN_CLOSED or event == 'Close': # if user closes window or clicks cancel
         break
@@ -209,6 +210,7 @@ while True:
                 sg.popup('Possa ser que algumas ordens de serviço não tenham sido faturadas corretamente..\nSugiro que clique novamente em "Iniciar" no canto inferior esquerdo do programa')            
         else:
             sg.popup('Não existe nenhuma guia no banco de dados para dar baixa!')
+
             
             
     if event == '-limpar_dados_os-':

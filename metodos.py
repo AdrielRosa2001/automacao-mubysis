@@ -100,9 +100,9 @@ def updateLinhaBanco(bancodb, tabela, campo, item, campo2, item2):
         cursor.execute(f"UPDATE {tabela} SET {campo} = '{item}' WHERE {campo2}= '{item2}'") # se o item for string inserir o item com aspas duplas depois simples = " 'Adriel' "
         banco.commit()
         banco.close()
-        print("*** Dados da coluna alterados com sucesso do banco! ***")
+        #print("*** Dados alterados! ***")
     except:
-        print("*** Houve um erro ao tentar alterar os dados da coluna do banco! ***")
+        print("*** Erro ao tentar alterar os dados da coluna do banco! ***")
         banco.close()
 
 path_folders = getPathFilesBanco()
