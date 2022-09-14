@@ -50,50 +50,6 @@ def realizar_producao(guia):
     page.wait_for_timeout(1000)
     page.locator("text=Baixa Completa").click()
 
-"""def realizar_pcp_producao(zeroOuUm, guia):
-    page.goto("https://mubisys.com/index.php?modulo=Pcp")
-    page.fill("input[name='search']", guia[0])
-    page.locator("[placeholder=\"Buscar\"]").press("Enter")
-    page.wait_for_timeout(1000)
-    page.click("a[title='Visualizar']")
-    page.wait_for_timeout(1000)
-    if zeroOuUm == 0:
-        page.locator(".icofont-gear").click()
-        page.wait_for_timeout(1000)
-        page.locator("text=Finalizar Produção").click()
-    elif zeroOuUm == 1:
-        page.locator(".icofont-gear").click()
-        page.wait_for_timeout(1000)
-        page.locator("text=Finalizar Produção").click()
-        page.locator(".icofont-gear").click()
-        page.wait_for_timeout(1000)
-        page.locator("text=Baixa Completa").click()"""
-
-
-"""def realizar_producao(a):
-    b = a
-    page.goto("https://mubisys.com/index.php?modulo=Producao")
-    page.wait_for_timeout(1000)
-    saida = True
-    sleep(4.0)
-    while saida:
-        try:
-            page.locator(f"text=0 0 {str(b)} 0 >> img").nth(2).click(timeout=250)
-            b = b-1
-            saida = False
-        except:
-            b = b+1
-            if b >= 30:
-                saida = False
-            else:
-                pass
-    page.wait_for_timeout(1000)
-    page.locator(selector="#itens > div > table > tbody > tr:nth-child(1) > td:nth-child(10) > a").click()
-    page.wait_for_timeout(1000)
-    page.locator("#rodapemodal img").nth(2).click()
-    page.wait_for_timeout(1000)
-    return b"""
-
 def realizar_faturamento(guia):
     page.goto("https://mubisys.com/index.php?modulo=Faturamento")
     page.wait_for_timeout(4000)
@@ -125,6 +81,25 @@ def realizar_faturamento(guia):
         page.locator("text=CAIXA - LOJA Z SUL Não atribuída").click()
     page.locator("#faturarfinal").click()
 
+def gerar_recibo_muby(guia, path_save):
+    #page.wait_for_url("https://mubisys.com/index.php?modulo=Contasareceber")
+    page.goto("https://mubisys.com/index.php?modulo=Contasareceber")
+    page.wait_for_timeout(500)
+    page.locator("#ativarfiltro").click()
+    page.wait_for_timeout(500)
+    page.locator("input[name=\"b_ordemdeservico\"]").fill(str(guia))
+    page.wait_for_timeout(500)
+    page.locator("button:has-text(\"Buscar\")").click()
+    page.wait_for_timeout(500)
+    page.locator(".inline > a > .icofont").first.click()
+    page.wait_for_timeout(500)
+    with page.expect_download() as download_info:
+        with page.expect_popup() as popup_info:
+            page.locator("text=Gerar recibo").click()
+        page1 = popup_info.value
+    download = download_info.value
+    download.save_as(f"{path_save}/Recibo - {guia}.pdf")
+
 #------------------------DEFINIÇÃO DE TEMA -----------------
 sg.theme('Reddit')
 #-----------------------------------------------------------
@@ -133,6 +108,10 @@ procedimento_tipo = None
 
 if argumentos[1] == "--faturar":
     procedimento_tipo = "Baixa e Faturamento"
+
+elif argumentos[1] == "--recibo_m":
+    procedimento_tipo = "Gerando Recibo pelo Muby"
+
 elif argumentos[1] == "--testar":
     procedimento_tipo = "Testando Modulo"
 
@@ -146,6 +125,8 @@ layout = [
 
 database = metodos.getDadosLogin()
 credenciais_muby = database[0]
+paths_files = metodos.getPathFilesBanco()
+
 
 controle_exibicao = ""
 realizar_procedimentos = False
@@ -170,7 +151,7 @@ except:
 #-----------------------------------------------------
 if argumentos[1] == "--faturar":
     while True:
-        event, values = window.read(timeout=10)
+        event, values = window.read(timeout=1000)
 
         if event == sg.WIN_CLOSED or event == 'Close':
             break
@@ -190,6 +171,7 @@ if argumentos[1] == "--faturar":
                         print("----Houve um erro ao tentar acessar a pagina PCP")
                     for guia in guias:
                         print("----------------------------------------")
+                        controle_de_procedimentos = [guia[4], guia[5], guia[6]]
                         if guia[4] == 1 or guia[5] == 1:
                             acessar_pagina_pcp()
                             if guia[4] == 1:
@@ -197,6 +179,7 @@ if argumentos[1] == "--faturar":
                                     realizar_pcp(guia)
                                     print(f"------{guia[0]} - PCP Realizado!")
                                     metodos.updateLinhaBanco("dbguias.db", "guias", "pcp", 0, "numeroOs", str(guia[0]))
+                                    controle_de_procedimentos[0] = 0
                                 except:
                                     print(f"------{guia[0]} - PCP FALHOU!")
                             if guia[5] == 1:
@@ -204,6 +187,7 @@ if argumentos[1] == "--faturar":
                                     realizar_producao(guia)
                                     print(f"------{guia[0]} - Produção Realizado!")
                                     metodos.updateLinhaBanco("dbguias.db", "guias", "producao", 0, "numeroOs", str(guia[0]))
+                                    controle_de_procedimentos[1] = 0
                                 except:
                                     print(f"------{guia[0]} - Produção FALHOU!")
                         if guia[6] == 1:
@@ -212,9 +196,13 @@ if argumentos[1] == "--faturar":
                                 print(f"------{guia[0]} - Faturamento Realizado!")
                                 print("----------------------------------------")
                                 metodos.updateLinhaBanco("dbguias.db", "guias", "faturamento", 0, "numeroOs", str(guia[0]))
-                                metodos.updateLinhaBanco("dbguias.db", "guias", "status", "efetuado", "numeroOS", str(guia[0]))
+                                controle_de_procedimentos[2] = 0
                             except:
                                 print(f"------{guia[0]} - Faturamento FALHOU!")
+                        
+                        if controle_de_procedimentos[0] == 0 and controle_de_procedimentos[1] == 0 and controle_de_procedimentos[2] == 0:
+                            metodos.updateLinhaBanco("dbguias.db", "guias", "status", "efetuado", "numeroOS", str(guia[0]))
+
                         print("----------------------------------------")
                 except Exception as erro:
                     print("--Houve um erro ao tentar realizar o login!")
@@ -229,6 +217,34 @@ if argumentos[1] == "--faturar":
         
         if realizar_procedimentos == False: 
             sg.popup("-Nenhuma ordem de serviço no banco para realizar faturamento.-")
+            break
+
+elif argumentos[1] == "--recibo_m":
+    while True:
+        event, values = window.read(timeout=1000)
+    
+        
+        with sync_playwright() as p:
+            browser = headless_inicial(argumentos)
+            page = browser.new_page()
+            try:
+                realizar_login(credenciais_muby[1], credenciais_muby[2])
+                print("--Login efetuado.")
+                try:
+                    gerar_recibo_muby(argumentos[3], paths_files[0])
+                    print("----Recibo emitido com sucesso!")
+                    break
+                except Exception as erro:
+                    print("----Houve um erro ao tentar emitir o recibo!")
+                    print("Erro: ", erro)
+                    break
+            except Exception as erro:
+                print("--Houve um erro ao tentar realizar o login!")
+                print("Erro: ", erro)
+                break
+
+
+        if event == sg.WIN_CLOSED or event == 'Close':
             break
 
 elif argumentos[1] == "--testar":

@@ -20,95 +20,6 @@ guias = []
 headless_set = '--headless-on'
 
 
-"""def realizar_relatorio_muby(data, loja, relatorios): # relatorios(plotagem, imagem)
-    page.goto("https://mubisys.com/index.php?modulo=Contasareceber")
-    page.wait_for_timeout(3000)
-    page.locator("#ativarfiltro").click()
-    #page.locator("input[name=\"datainicial\"]").click()
-    page.wait_for_timeout(1000)
-    data = data.replace("/", "-")
-    print(data)
-    page.locator("input[name=\"datainicial\"]").fill(data)
-    page.wait_for_timeout(2000)
-    page.locator("input[name=\"datafinal\"]").fill(data)
-    page.wait_for_timeout(2000)
-    
-    #page.wait_for_timeout(1000)
-    #page.locator(".active.day").click()
-    #page.locator("input[name=\"datainicial\"]").click()
-    #page.locator("input[name=\"datainicial\"]").press("Enter")
-    #page.wait_for_timeout(1500)
-    #page.locator("input[name=\"datainicial\"]").press('Enter')
-    #page.locator("input[name=\"datainicial\"]").click()
-    #page.locator("input[name=\"datafinal\"]").fill(data)
-    #page.locator("input[name=\"datainicial\"]").click()
-    #page.wait_for_timeout(1500)
-    #page.locator("input[name=\"datafinal\"]").press('Enter')
-    
-    page.wait_for_timeout(500)
-    page.locator(selector="#maisopcoes > div:nth-child(1) > div:nth-child(4) > div > button").click()
-    page.locator(selector="#bs-select-4-2").click()
-    page.locator(selector="#maisopcoes > div:nth-child(1) > div:nth-child(4) > div > button").click()
-    if relatorios[0] == 1: # plotagem
-        page.locator(selector="#maisopcoes > div:nth-child(1) > div:nth-child(5) > div > button").click()
-        if loja == "SJ": 
-            page.locator(selector="#bs-select-5-4").click()
-        elif loja == "TR":
-            page.locator(selector="#bs-select-5-5").click()
-        elif loja == "ZS":
-            page.locator(selector="#bs-select-5-6").click()
-    else: 
-        pass
-    if relatorios[1] == 1: # imagem
-        page.locator(selector="#maisopcoes > div:nth-child(1) > div:nth-child(5) > div > button").click()
-        if loja == "SJ": 
-            page.locator(selector="#bs-select-5-1").click()
-        elif loja == "TR":
-            page.locator(selector="#bs-select-5-2").click()
-        elif loja == "ZS":
-            page.locator(selector="#bs-select-5-3").click()
-    else:
-        pass
-    page.locator(selector="#maisopcoes > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div > button").click()
-    page.locator(selector="#bs-select-10-3").click() # AMERICAN EXPRESS
-    page.locator(selector="#bs-select-10-6").click() # DEPOSITO BB
-    page.locator(selector="#bs-select-10-7").click() # DEPOSITO BNB
-    page.locator(selector="#bs-select-10-8").click() # DINER CREDITO
-    page.locator(selector="#bs-select-10-9").click() # DINER DEBITO
-    page.locator(selector="#bs-select-10-10").click() # ELO CREDITO
-    page.locator(selector="#bs-select-10-11").click() # ELO DEBITO
-    page.locator(selector="#bs-select-10-12").click() # ESPECIE
-    page.locator(selector="#bs-select-10-13").click() # HIPERCARD
-    page.locator(selector="#bs-select-10-14").click() # MASTER CREDITO
-    page.locator(selector="#bs-select-10-15").click() # MASTER DEBITO
-    page.locator(selector="#bs-select-10-18").click() # VISA CREDITO
-    page.locator(selector="#bs-select-10-19").click() # VISA DEBITO
-    page.locator(selector="#maisopcoes > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div > button").click() 
-    page.locator(selector="#buscar").click()
-    page.wait_for_timeout(6000)
-    with page.expect_download() as donwload_info:
-        page.click(selector="#gerarpdfresultado")
-    donwload = donwload_info.value
-    donwload.save_as("./caminho")
-    path = donwload.path()
-
-    print(path)
-    print(type(path))
-    #os.system(f"explorer.exe \"{path}\"")
-
-    #lista_arquivos = os.listdir(path)
-
-    #page.wait_for_timeout(5000)
-
-    #for arquivo in lista_arquivos:
-     #   print(arquivo)
-     #   if ".pdf" in arquivo:
-     #       os.rename(f"{path}\\{arquivo}", f"C:\\Users\\PRODUCAOPC2\\Desktop\\Relatorios_e_Recibos\\{arquivo}")
-     #       print(f"movendo \"{arquivo}\", para novo diretorio!")
-
-    #os.system("explorer.exe \"C:\\Users\\PRODUCAOPC2\\Desktop\\Relatorios_e_Recibos")
-"""
-
 #Tema do programa deifindo
 sg.theme('Reddit')
 
@@ -135,7 +46,7 @@ tab5 = interface.tab5(frame04)
 layout = interface.layout(tab1, tab2, tab3, tab4, tab5)
 
 
-window = sg.Window('AutoMuby 3.0', layout, icon='./assets/icon2.0.ico')
+window = sg.Window('AutoMuby 5.0', layout, icon='./assets/icon2.0.ico')
 
 # Abrindo configurações:
 #database = metodos.coletar_dados("configs.txt", 0)
@@ -217,6 +128,9 @@ while True:
         window['-os_adicionadas-'].update('-------------------------------------------Ordens de serviço adicionadas-------------------------------------------')
         window['-ordem_de_serviço-'].update('')
         window['-f_pagamento-'].update('A DEFINIR')
+        window['-pcp-'].update(True)
+        window['-producao-'].update(True)
+        window['-faturamento-'].update(True)
         guias = []
         metodos.limparDadosBanco("dbguias.db", "guias")
         sg.popup("Dados limpos com sucesso!")
@@ -303,6 +217,13 @@ while True:
             sg.popup("Houve um erro ao gerar o recibo")
             print(err)
 
+    if event == '-emitir_recibo_Muby-':
+        try:
+            guia_recibo = values['-os_recibo_muby-']
+            os.system(f"python modulo_muby.py --recibo_m {headless_set} {guia_recibo}")
+            window['-os_recibo_muby-'].update("")
+        except:
+            pass
 
     if event == '-salvar_cliente-':
         try:

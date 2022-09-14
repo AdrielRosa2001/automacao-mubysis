@@ -1,3 +1,4 @@
+import shutil
 from openpyxl import load_workbook
 from openpyxl.drawing.image import Image
 from win32com import client
@@ -9,6 +10,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import sqlite3
+from shutil import move
 
 path_folders = None #path (recibos muby, recibos manual, clientes cadastrados)
 
@@ -106,7 +108,6 @@ def updateLinhaBanco(bancodb, tabela, campo, item, campo2, item2):
         banco.close()
 
 path_folders = getPathFilesBanco()
-print(path_folders)
 
 def getdata(saida):
     data_public = datetime.date.today()
@@ -187,11 +188,12 @@ def salvar_dados(caminho_arquivo, lista):
         arquivo.close()
         print("Dados salvos!!")
 
-def salvar_cliente(cliente):
+def salvar_cliente(cliente, path_folders):
+    path_folders = getPathFilesBanco()
     temp_list = []
     for i in cliente:
         temp_list.append(i+str("\n"))
-    arquivo = open(str(path_folders[0])+f"/{str(cliente[0]).upper()}.txt", "w")
+    arquivo = open(f"{path_folders[2]}/{cliente[0].upper()}.txt", "w")
     arquivo.writelines(temp_list)
     arquivo.close()
     print("Dados salvos!!")
@@ -229,6 +231,8 @@ def enviar_email(dados, mensagem, destino):
     server.quit()
 
 def gerar_recibo(dados):
+
+    path_folders = getPathFilesBanco()
 
     nome = dados['cliente']
     valor = float(str(dados['valor']).replace(",", "."))
@@ -274,6 +278,12 @@ def gerar_recibo(dados):
     #Abrindo arquivo excel
     workbook = app_excel.Workbooks.Open(path_fille)
     #Convertendo em PDF
-    workbook.ActiveSheet.ExportAsFixedFormat(0, path_fille)
+    #workbook.ActiveSheet.ExportAsFixedFormat(0, path_fille)
+    new_path_save = str(path_folders[1]).replace('/', '\\')
+    workbook.ActiveSheet.ExportAsFixedFormat(0, f"{new_path_save}\\{nome_save}.pdf")
     workbook.Close()
     os.remove(path_fille)
+
+    """
+    path_folders[2] = str(path_folders[2]).replace('/', '\\')
+    shutil.move(f"{path_fille}.pdf", f"{path_folders[2]}") """

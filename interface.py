@@ -105,8 +105,7 @@ def frame05(coluna07, coluna08):
 
 def frame06():
     frame06 = [
-        [sg.Text('--Área em desenvolvimento--')],
-        [sg.Text('Numero da OS: '), sg.InputText('', size=(15, 1)), sg.Button('Emitir Recibo Muby', key=('-emitir_recibo_Muby-'))]
+        [sg.Text('Numero da OS: '), sg.InputText('', key=('-os_recibo_muby-'), size=(15, 1)), sg.Button('Emitir Recibo Muby', key=('-emitir_recibo_Muby-'))]
     ]
     return frame06
 
