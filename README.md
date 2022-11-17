@@ -45,7 +45,7 @@ Software desenvolvido em python com a intenção de atividades internas realizad
  ## Tecnologias:
  - Python
  - Bibliotecas Python: 
-   - playwirght
+   - Playwright
    - openpyxl
    - win32com
    - num2words
