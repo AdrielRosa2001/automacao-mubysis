@@ -18,7 +18,7 @@ Software desenvolvido em python com a intenção de atividades internas realizad
 
 ### Nota Fiscal:
 
-![preview](./.github/preview3-notafiscal.gif)
+![preview](./.github/preview3-notafiscal.gif) 
 
 - Cria um corpo de e-mail a ser enviado ao financeiro para solicitação de nota fiscal para o cliente (Sendo possivel alterar o campo do corpo de e-mail).
 
