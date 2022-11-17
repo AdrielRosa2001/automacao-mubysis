@@ -30,7 +30,7 @@ Software desenvolvido em python com a intenção de atividades internas realizad
 
   ![preview](./.github/preview4-recibomanual.gif)
   
-  - Manual: Emite um recibo manual utilizando bibliotecas de manipulação de planilha e exportação em PDF.
+  - Manual: Emite um recibo manual utilizando bibliotecas de manipulação de planilha e exportação em PDF. 
   
   ###
   
